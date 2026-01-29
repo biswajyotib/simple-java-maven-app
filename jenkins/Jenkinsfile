@@ -2,48 +2,43 @@ pipeline {
   agent any
 
   tools {
-    maven 'Maven3'
+    maven 'maven3'
+    jdk 'jdk21'
   }
 
   stages {
+
+    stage('Java Check') {
+      steps {
+        bat 'echo JAVA_HOME=%JAVA_HOME%'
+        bat 'java -version'
+        bat 'where javac'
+        bat 'javac -version'
+        bat 'mvn -version'
+      }
+    }
+
     stage('Build') {
       steps {
-        script {
-          if (isUnix()) {
-            sh 'mvn -B -DskipTests clean package'
-          } else {
-            bat 'mvn -B -DskipTests clean package'
-          }
-        }
+        bat 'mvn -B -DskipTests clean package'
       }
     }
 
     stage('Test') {
       steps {
-        script {
-          if (isUnix()) {
-            sh 'mvn -B test'
-          } else {
-            bat 'mvn -B test'
-          }
-        }
+        bat 'mvn -B test'
       }
       post {
         always {
-          junit testResults: 'target/surefire-reports/*.xml', allowEmptyResults: true
+          junit testResults: 'target/surefire-reports/*.xml',
+                allowEmptyResults: true
         }
       }
     }
 
     stage('Deliver') {
       steps {
-        script {
-          if (isUnix()) {
-            sh './jenkins/scripts/deliver.sh'
-          } else {
-            powershell '.\\jenkins\\scripts\\deliver.ps1'
-          }
-        }
+        powershell '.\\jenkins\\scripts\\deliver.ps1'
       }
     }
 
