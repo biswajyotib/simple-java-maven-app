@@ -36,6 +36,14 @@ pipeline {
       }
     }
 
+    stage('List deliver script') {
+  steps {
+    bat 'dir'
+    bat 'dir jenkins'
+    bat 'dir jenkins\\scripts'
+    bat 'dir jenkins\\scripts\\deliver.ps1'
+  }
+}
     stage('Deliver') {
       steps {
         powershell '.\\jenkins\\scripts\\deliver.ps1'
