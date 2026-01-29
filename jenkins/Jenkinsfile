@@ -50,10 +50,5 @@ pipeline {
       }
     }
 
-    stage('Complete') {
-      steps {
-        echo 'Job Completed with polling!'
-      }
-    }
-  }
+   }
 }
